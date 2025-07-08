@@ -102,7 +102,7 @@ function App() {
 
   const handleAddProblem = async (title: string, link: string, category: string) => {
     try {
-      await addProblem(title, link, category);
+      await addProblem(title, link, category, localState.authenticatedMemberId);
     } catch (err) {
       console.error('Failed to add problem:', err);
     }

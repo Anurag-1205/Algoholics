@@ -27,6 +27,7 @@ export interface Database {
           title: string;
           link: string;
           category: string;
+          created_by: string | null;
           created_at: string;
         };
         Insert: {
@@ -34,6 +35,7 @@ export interface Database {
           title: string;
           link: string;
           category: string;
+          created_by?: string | null;
           created_at?: string;
         };
         Update: {
@@ -41,6 +43,7 @@ export interface Database {
           title?: string;
           link?: string;
           category?: string;
+          created_by?: string | null;
           created_at?: string;
         };
       };

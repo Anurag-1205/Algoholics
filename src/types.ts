@@ -10,6 +10,7 @@ export interface Problem {
   title: string;
   link: string;
   category: string;
+  createdById: string | null;
   createdAt: string;
 }
 

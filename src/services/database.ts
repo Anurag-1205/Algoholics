@@ -52,10 +52,10 @@ export const deleteMember = async (memberId: string): Promise<void> => {
 };
 
 // Problems
-export const createProblem = async (title: string, link: string, category: string): Promise<Problem> => {
+export const createProblem = async (title: string, link: string, category: string, createdById: string | null = null): Promise<Problem> => {
   const { data, error } = await supabase
     .from('problems')
-    .insert({ title, link, category })
+    .insert({ title, link, category, created_by: createdById })
     .select()
     .single();
 
@@ -66,6 +66,7 @@ export const createProblem = async (title: string, link: string, category: strin
     title: data.title,
     link: data.link,
     category: data.category,
+    createdById: data.created_by,
     createdAt: data.created_at,
   };
 };
@@ -83,6 +84,7 @@ export const getProblems = async (): Promise<Problem[]> => {
     title: problem.title,
     link: problem.link,
     category: problem.category,
+    createdById: problem.created_by,
     createdAt: problem.created_at,
   }));
 };

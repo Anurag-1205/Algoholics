@@ -69,6 +69,22 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
 
   const isAuthenticated = currentMember && authenticatedMemberId === currentMember.id;
 
+  // Helper function to get creator name
+  const getCreatorName = (createdById: string | null) => {
+    if (!createdById) return 'Public';
+    const creator = members.find(m => m.id === createdById);
+    return creator ? creator.name : 'Public';
+  };
+
+  // Helper function to check if current user can delete a problem
+  const canDeleteProblem = (problem: Problem) => {
+    if (!isAuthenticated) return false;
+    // Can delete if user is the creator or if creator no longer exists (createdById is null or creator not found)
+    return problem.createdById === currentMember?.id || 
+           !problem.createdById || 
+           !members.find(m => m.id === problem.createdById);
+  };
+
   // Get unique categories for filter
   const categories = Array.from(new Set(problems.map(p => p.category))).sort();
   
@@ -209,6 +225,13 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
                               <Tag className="h-3 w-3" />
                               {problem.category}
                             </span>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              problem.createdById 
+                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                            }`}>
+                              {getCreatorName(problem.createdById)}
+                            </span>
                             <a
                               href={problem.link}
                               target="_blank"
@@ -260,13 +283,19 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
                       );
                     })}
                     <td className="px-4 py-4 text-center">
-                      <button
-                        onClick={() => onDeleteProblem(problem.id)}
-                        className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        title="Delete problem"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {canDeleteProblem(problem) ? (
+                        <button
+                          onClick={() => onDeleteProblem(problem.id)}
+                          className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          title={problem.createdById === currentMember?.id ? "Delete my problem" : "Delete public problem"}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <div className="p-2 text-gray-400 dark:text-gray-600" title="Only the creator can delete this problem">
+                          <Trash2 className="h-4 w-4 opacity-50" />
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

@@ -144,9 +144,9 @@ export const useDatabase = () => {
   };
 
   // Problem operations
-  const addProblem = async (title: string, link: string, category: string): Promise<Problem> => {
+  const addProblem = async (title: string, link: string, category: string, createdById: string | null = null): Promise<Problem> => {
     try {
-      const newProblem = await createProblem(title, link, category);
+      const newProblem = await createProblem(title, link, category, createdById);
       setProblems(prev => [...prev, newProblem]);
       return newProblem;
     } catch (err) {

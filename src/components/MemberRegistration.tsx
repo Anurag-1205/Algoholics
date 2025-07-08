@@ -26,13 +26,37 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
   const [selectedMemberForAuth, setSelectedMemberForAuth] = useState<Member | null>(null);
   const [authPin, setAuthPin] = useState('');
   const [authError, setAuthError] = useState('');
+  const [nameError, setNameError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear previous errors
+    setNameError('');
+    
+    // Validate name is not empty
+    if (!name.trim()) {
+      setNameError('Name is required');
+      return;
+    }
+    
+    // Check if name is already taken (case-insensitive)
+    const normalizedName = name.trim().toLowerCase();
+    const isNameTaken = members.some(member => 
+      member.name.toLowerCase() === normalizedName
+    );
+    
+    if (isNameTaken) {
+      setNameError('This name is already taken. Please choose a different name.');
+      return;
+    }
+    
+    // Validate PIN is not empty
     if (name.trim() && pin.trim()) {
       onRegister(name.trim(), pin.trim());
       setName('');
       setPin('');
+      setNameError('');
     }
   };
 
@@ -80,7 +104,7 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
   const isAuthenticated = currentMember && authenticatedMemberId === currentMember.id;
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 relative">
       <div className="relative">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
@@ -215,9 +239,17 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            // Clear error when user starts typing
+            if (nameError) setNameError('');
+          }}
           placeholder="Enter your name"
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className={`px-3 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+            nameError 
+              ? 'border-red-500 dark:border-red-400' 
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
         <input
           type="password"
@@ -234,6 +266,13 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
           Join
         </button>
       </form>
+      
+      {/* Error message */}
+      {nameError && (
+        <div className="absolute top-full left-0 mt-1 text-sm text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 px-2 py-1 rounded shadow-lg border border-red-200 dark:border-red-800">
+          {nameError}
+        </div>
+      )}
     </div>
   );
 };
