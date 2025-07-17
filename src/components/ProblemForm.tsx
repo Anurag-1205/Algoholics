@@ -17,6 +17,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
     'Stack',
     'Queue',
     'Tree',
+    'Binary Search Tree',
     'Graph',
     'Dynamic Programming',
     'Greedy',
