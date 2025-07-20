@@ -1,46 +1,60 @@
-import React, { useState } from 'react';
-import { Plus, Link as LinkIcon, Tag } from 'lucide-react';
+import React, { useState } from "react";
+import { Plus, Link as LinkIcon, Tag } from "lucide-react";
 
 interface ProblemFormProps {
   onAddProblem: (title: string, link: string, category: string) => void;
 }
 
 export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
-  const [title, setTitle] = useState('');
-  const [link, setLink] = useState('');
-  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState("");
+  const [link, setLink] = useState("");
+  const [category, setCategory] = useState("");
 
   const commonCategories = [
-    'Array',
-    'String',
-    'LinkedList',
-    'Stack',
-    'Queue',
-    'Tree',
-    'Binary Search Tree',
-    'Graph',
-    'Dynamic Programming',
-    'Greedy',
-    'Backtracking',
-    'Binary Search',
-    'Sorting',
-    'Hash Table',
-    'Two Pointers',
-    'Sliding Window',
-    'Math',
-    'Bit Manipulation',
-    'Heap',
-    'Trie',
-    'Union Find'
+    "Array",
+    "String",
+    "LinkedList",
+    "Stack",
+    "Queue",
+    "Tree",
+    "Binary Tree",
+    "Binary Search Tree",
+    "Heap",
+    "Trie",
+    "Hashing",
+    "Sorting",
+    "Searching",
+    "Recursion",
+    "Backtracking",
+    "Divide and Conquer",
+    "Greedy",
+    "Dynamic Programming",
+    "Bit Manipulation",
+    "Sliding Window",
+    "Two Pointers",
+    "Prefix Sum",
+    "Math",
+    "Number Theory",
+    "Modular Arithmetic",
+    "Probability",
+    "Combinatorics",
+    "Geometry",
+    "Graphs",
+    "Union Find",
+    "Segment Tree",
+    "Fenwick Tree",
+    "Disjoint Set Union (DSU)",
+    "Bitmask DP",
+    "Game Theory",
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() && link.trim() && category.trim()) {
       onAddProblem(title.trim(), link.trim(), category.trim());
-      setTitle('');
-      setLink('');
-      setCategory('');
+      setTitle("");
+      setLink("");
+      setCategory("");
     }
   };
 
@@ -50,7 +64,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
         <Plus className="h-5 w-5" />
         Add DSA Problem
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -88,7 +102,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
             </datalist>
           </div>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Problem Link
@@ -105,7 +119,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
             />
           </div>
         </div>
-        
+
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"

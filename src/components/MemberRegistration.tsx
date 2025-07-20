@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserPlus, Users, Trash2, AlertTriangle, Lock } from 'lucide-react';
+import { UserPlus, Users, Trash2, Lock } from 'lucide-react';
 import { Member } from '../types';
 import { ProfileDeleteModal } from './ProfileDeleteModal';
 

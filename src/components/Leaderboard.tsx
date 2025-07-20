@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Trophy, Medal, Award, User, Calendar, Target, Crown } from 'lucide-react';
+import { Trophy, Calendar} from 'lucide-react';
 import { Member, Submission, Problem } from '../types';
 
 interface LeaderboardProps {
