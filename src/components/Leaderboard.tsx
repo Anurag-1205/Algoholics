@@ -58,9 +58,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
         return b.solvedCount - a.solvedCount;
       }
       
-      // If solved counts are equal, sort by last solved date (more recent first)
+      // If solved counts are equal, sort by member creation date (older first)
       if (a.lastSolvedDate && b.lastSolvedDate) {
-        return new Date(b.lastSolvedDate).getTime() - new Date(a.lastSolvedDate).getTime();
+        return new Date(a.lastSolvedDate).getTime() - new Date(b.lastSolvedDate).getTime();
       }
       if (a.lastSolvedDate && !b.lastSolvedDate) return -1;
       if (!a.lastSolvedDate && b.lastSolvedDate) return 1;
