@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserPlus, Users, Trash2, AlertTriangle, Lock } from 'lucide-react';
 import { Member } from '../types';
+import { ProfileDeleteModal } from './ProfileDeleteModal';
 
 interface MemberRegistrationProps {
   members: Member[];
@@ -22,7 +23,7 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
   const [name, setName] = useState('');
   const [pin, setPin] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMemberForAuth, setSelectedMemberForAuth] = useState<Member | null>(null);
   const [authPin, setAuthPin] = useState('');
   const [authError, setAuthError] = useState('');
@@ -96,7 +97,7 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
   const handleDeleteProfile = () => {
     if (currentMember) {
       onDeleteMember(currentMember.id);
-      setShowDeleteConfirm(false);
+      setShowDeleteModal(false);
       setShowDropdown(false);
     }
   };
@@ -190,7 +191,7 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setShowDeleteConfirm(true);
+                          setShowDeleteModal(true);
                         }}
                         className="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                         title="Delete my profile"
@@ -203,34 +204,6 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
               </div>
             )}
             
-            {/* Delete Confirmation */}
-            {showDeleteConfirm && !selectedMemberForAuth && (
-              <div className="border-t border-gray-200 dark:border-gray-600 p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertTriangle className="h-4 w-4 text-red-500" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    Delete Profile?
-                  </span>
-                </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
-                  This will permanently delete your profile and all your solutions. This action cannot be undone.
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleDeleteProfile}
-                    className="flex-1 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="flex-1 px-3 py-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -272,6 +245,16 @@ export const MemberRegistration: React.FC<MemberRegistrationProps> = ({
         <div className="absolute top-full left-0 mt-1 text-sm text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 px-2 py-1 rounded shadow-lg border border-red-200 dark:border-red-800">
           {nameError}
         </div>
+      )}
+
+      {/* Profile Delete Modal */}
+      {showDeleteModal && currentMember && (
+        <ProfileDeleteModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteProfile}
+          profileName={currentMember.name}
+        />
       )}
     </div>
   );

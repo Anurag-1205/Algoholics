@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Brain, Loader2, AlertCircle } from 'lucide-react';
-import { Member, AppState } from './types';
-import { MemberRegistration } from './components/MemberRegistration';
-import { ProblemForm } from './components/ProblemForm';
-import { MembersList } from './components/MembersList';
-import { ProblemGrid } from './components/ProblemGrid';
-import { ThemeToggle } from './components/ThemeToggle';
-import { useDatabase } from './hooks/useDatabase';
-import { loadState, saveState } from './utils/storage';
+// import { useState, useEffect } from 'react';
+// import { Brain, Loader2, AlertCircle } from 'lucide-react';
+// import { Member, AppState } from './types';
+// import { MemberRegistration } from './components/MemberRegistration';
+// import { ProblemForm } from './components/ProblemForm';
+// import { Leaderboard } from './components/Leaderboard';
+// import { ProblemGrid } from './components/ProblemGrid';
+// import { ThemeToggle } from './components/ThemeToggle';
+// import { useDatabase } from './hooks/useDatabase';
+// import { loadState, saveState } from './utils/storage';
 
 function App() {
   const {
@@ -226,8 +226,8 @@ function App() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Members Overview */}
-            <MembersList
+            {/* Leaderboard */}
+            <Leaderboard
               members={members}
               currentMember={localState.currentMember}
               submissions={submissions}
