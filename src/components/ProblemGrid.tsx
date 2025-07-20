@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, Edit3, ExternalLink, Trash2, Lock, Tag, Filter } from 'lucide-react';
 import { Problem, Member, Submission } from '../types';
 import { SolutionModal } from './SolutionModal';
+import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 
 interface ProblemGridProps {
   problems: Problem[];
@@ -25,6 +26,8 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [problemToDelete, setProblemToDelete] = useState<Problem | null>(null);
 
   const getSubmission = (problemId: string, memberId: string) => {
     return submissions.find(s => s.problemId === problemId && s.memberId === memberId);
@@ -74,6 +77,24 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
     if (!createdById) return 'Public';
     const creator = members.find(m => m.id === createdById);
     return creator ? creator.name : 'Public';
+  };
+
+  const handleDeleteClick = (problem: Problem) => {
+    setProblemToDelete(problem);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (problemToDelete) {
+      await onDeleteProblem(problemToDelete.id);
+      setProblemToDelete(null);
+      setDeleteModalOpen(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setProblemToDelete(null);
+    setDeleteModalOpen(false);
   };
 
   // Helper function to check if current user can delete a problem
@@ -285,7 +306,7 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
                     <td className="px-4 py-4 text-center">
                       {canDeleteProblem(problem) ? (
                         <button
-                          onClick={() => onDeleteProblem(problem.id)}
+                          onClick={() => handleDeleteClick(problem)}
                           className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                           title={problem.createdById === currentMember?.id ? "Delete my problem" : "Delete public problem"}
                         >
@@ -315,6 +336,15 @@ export const ProblemGrid: React.FC<ProblemGridProps> = ({
           submissions={submissions}
           members={members}
           onUpdateSubmission={onUpdateSubmission}
+        />
+      )}
+
+      {deleteModalOpen && problemToDelete && (
+        <DeleteConfirmationModal
+          isOpen={deleteModalOpen}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          problemTitle={problemToDelete.title}
         />
       )}
     </>
