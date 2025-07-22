@@ -156,25 +156,22 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ problems, onAddProblem
           </label>
           <div className="relative">
             <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
+            <select
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
                 if (error) setError('');
               }}
-              placeholder="e.g., Array, LinkedList, Greedy"
-              list="categories"
               className={`w-full pl-10 pr-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
               }`}
               required
-            />
-            <datalist id="categories">
+            >
+              <option value="">Select a category</option>
               {commonCategories.map((cat) => (
-                <option key={cat} value={cat} />
+                <option key={cat} value={cat}>{cat}</option>
               ))}
-            </datalist>
+            </select>
           </div>
         </div>
         
