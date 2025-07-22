@@ -121,16 +121,21 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Never';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
     
-    if (diffInHours < 24) {
+    const solvedDate = new Date(dateString);
+    const now = new Date();
+    
+    // Get dates without time for comparison
+    const solvedDateOnly = new Date(solvedDate.getFullYear(), solvedDate.getMonth(), solvedDate.getDate());
+    const todayDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterdayDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    
+    if (solvedDateOnly.getTime() === todayDateOnly.getTime()) {
       return 'Today';
-    } else if (diffInHours < 48) {
+    } else if (solvedDateOnly.getTime() === yesterdayDateOnly.getTime()) {
       return 'Yesterday';
     } else {
-      return date.toLocaleDateString();
+      return solvedDate.toLocaleDateString();
     }
   };
 
