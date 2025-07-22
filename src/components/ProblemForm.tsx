@@ -50,8 +50,10 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
         setError('');
       } catch (err: any) {
         // Handle specific duplicate error messages
-        if (err.message.includes('duplicate')) {
-          setError(`A problem with the title "${title.trim()}" already exists. Please use a different title.`);
+        if (err.message.includes('title')) {
+          setError(`A problem with this title already exists`);
+        } else if (err.message.includes('already exists')) {
+          setError('This problem already exists. Please check the title and link.');
         } else {
           setError(err.message || 'Failed to add problem. Please try again.');
         }
