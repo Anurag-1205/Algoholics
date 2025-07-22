@@ -151,7 +151,7 @@ export const useDatabase = () => {
       return newProblem;
     } catch (err) {
       console.error('Error creating problem:', err);
-      throw new Error('Failed to create problem');
+      throw err;
     }
   };
 

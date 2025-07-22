@@ -240,7 +240,7 @@ function App() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Left Panel - Add Problem Form */}
               <div className="lg:col-span-1">
-                <ProblemForm onAddProblem={handleAddProblem} />
+                <ProblemForm problems={problems} onAddProblem={handleAddProblem} />
               </div>
 
               {/* Right Panel - Problem Grid */}
