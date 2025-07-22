@@ -62,7 +62,7 @@ export const createProblem = async (title: string, link: string, category: strin
   if (error) {
     // Handle unique constraint violations
     if (error.code === '23505') {
-      if (error.message.includes('title')) {
+      if (error.message.includes('title') || error.message.includes('duplicate')) {
         throw new Error('A problem with this title already exists');
       } else {
         throw new Error('This problem already exists');
