@@ -55,7 +55,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
         } else if (err.message.includes('already exists')) {
           setError('This problem already exists. Please check the title and link.');
         } else {
-          setError(err.message || 'Failed to add problem. Please try again.');
+          setError('Failed to add problem. Please try again.');
         }
       } finally {
         setIsSubmitting(false);
