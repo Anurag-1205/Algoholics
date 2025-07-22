@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Brain, Loader2, AlertCircle } from 'lucide-react';
 import { Member, AppState } from './types';
 import { MemberRegistration } from './components/MemberRegistration';
@@ -105,6 +105,8 @@ function App() {
       await addProblem(title, link, category, localState.authenticatedMemberId);
     } catch (err) {
       console.error('Failed to add problem:', err);
+      // Re-throw the error so ProblemForm can handle it
+      throw err;
     }
   };
 

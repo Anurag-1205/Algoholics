@@ -1,60 +1,67 @@
-import React, { useState } from "react";
-import { Plus, Link as LinkIcon, Tag } from "lucide-react";
+import React, { useState } from 'react';
+import { Plus, Link as LinkIcon, Tag } from 'lucide-react';
 
 interface ProblemFormProps {
   onAddProblem: (title: string, link: string, category: string) => void;
 }
 
 export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
-  const [title, setTitle] = useState("");
-  const [link, setLink] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState('');
+  const [link, setLink] = useState('');
+  const [category, setCategory] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const commonCategories = [
-    "Array",
-    "String",
-    "LinkedList",
-    "Stack",
-    "Queue",
-    "Tree",
-    "Binary Tree",
-    "Binary Search Tree",
-    "Heap",
-    "Trie",
-    "Hashing",
-    "Sorting",
-    "Searching",
-    "Recursion",
-    "Backtracking",
-    "Divide and Conquer",
-    "Greedy",
-    "Dynamic Programming",
-    "Bit Manipulation",
-    "Sliding Window",
-    "Two Pointers",
-    "Prefix Sum",
-    "Math",
-    "Number Theory",
-    "Modular Arithmetic",
-    "Probability",
-    "Combinatorics",
-    "Geometry",
-    "Graphs",
-    "Union Find",
-    "Segment Tree",
-    "Fenwick Tree",
-    "Disjoint Set Union (DSU)",
-    "Bitmask DP",
-    "Game Theory",
+    'Array',
+    'String',
+    'LinkedList',
+    'Stack',
+    'Queue',
+    'Tree',
+    'Graph',
+    'Dynamic Programming',
+    'Greedy',
+    'Backtracking',
+    'Binary Search',
+    'Sorting',
+    'Hash Table',
+    'Two Pointers',
+    'Sliding Window',
+    'Math',
+    'Bit Manipulation',
+    'Heap',
+    'Trie',
+    'Union Find'
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
     if (title.trim() && link.trim() && category.trim()) {
-      onAddProblem(title.trim(), link.trim(), category.trim());
-      setTitle("");
-      setLink("");
-      setCategory("");
+      setIsSubmitting(true);
+      
+      try {
+        onAddProblem(title.trim(), link.trim(), category.trim());
+        setTitle('');
+        setLink('');
+        setCategory('');
+      } catch (err: any) {
+        if (err.message?.includes('duplicate') || err.message?.includes('unique')) {
+          if (err.message?.includes('title')) {
+            setError('A problem with this title already exists. Please use a different title.');
+          } else if (err.message?.includes('link')) {
+            setError('A problem with this link already exists. Please use a different link.');
+          } else {
+            setError('This problem already exists. Please check the title and link.');
+          }
+        } else {
+          setError('Failed to add problem. Please try again.');
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -64,7 +71,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
         <Plus className="h-5 w-5" />
         Add DSA Problem
       </h2>
-
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -73,9 +80,14 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
           <input
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+             onChange={(e) => {
+               setTitle(e.target.value);
+               if (error) setError('');
+             }}
             placeholder="e.g., Two Sum, Valid Parentheses"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+             className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+               error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+             }`}
             required
           />
         </div>
@@ -89,10 +101,15 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
             <input
               type="text"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+               onChange={(e) => {
+                 setCategory(e.target.value);
+                 if (error) setError('');
+               }}
               placeholder="e.g., Array, LinkedList, Greedy"
               list="categories"
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+               className={`w-full pl-10 pr-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                 error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+               }`}
               required
             />
             <datalist id="categories">
@@ -102,7 +119,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
             </datalist>
           </div>
         </div>
-
+        
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Problem Link
@@ -112,20 +129,45 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
             <input
               type="url"
               value={link}
-              onChange={(e) => setLink(e.target.value)}
+               onChange={(e) => {
+                 setLink(e.target.value);
+                 if (error) setError('');
+               }}
               placeholder="https://leetcode.com/problems/..."
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+               className={`w-full pl-10 pr-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                 error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+               }`}
               required
             />
           </div>
         </div>
-
+        
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          </div>
+        )}
+        
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+          disabled={isSubmitting}
+          className={`w-full py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 ${
+            isSubmitting
+              ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
         >
-          <Plus className="h-4 w-4" />
-          Add Problem
+          {isSubmitting ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Adding...
+            </>
+          ) : (
+            <>
+              <Plus className="h-4 w-4" />
+              Add Problem
+            </>
+          )}
         </button>
       </form>
     </div>
