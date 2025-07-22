@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Brain, Loader2, AlertCircle } from 'lucide-react';
 import { Member, AppState } from './types';
 import { MemberRegistration } from './components/MemberRegistration';

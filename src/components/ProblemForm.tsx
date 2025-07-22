@@ -35,7 +35,7 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
     'Union Find'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
@@ -43,21 +43,21 @@ export const ProblemForm: React.FC<ProblemFormProps> = ({ onAddProblem }) => {
       setIsSubmitting(true);
       
       try {
-        onAddProblem(title.trim(), link.trim(), category.trim());
+        await onAddProblem(title.trim(), link.trim(), category.trim());
         setTitle('');
         setLink('');
         setCategory('');
+        setError('');
       } catch (err: any) {
-        if (err.message?.includes('duplicate') || err.message?.includes('unique')) {
-          if (err.message?.includes('title')) {
-            setError('A problem with this title already exists. Please use a different title.');
-          } else if (err.message?.includes('link')) {
-            setError('A problem with this link already exists. Please use a different link.');
-          } else {
-            setError('This problem already exists. Please check the title and link.');
-          }
+        // Handle specific duplicate error messages
+        if (err.message.includes('title')) {
+          setError(`A problem with the title "${title.trim()}" already exists. Please use a different title.`);
+        } else if (err.message.includes('link')) {
+          setError('A problem with this link already exists. Please use a different link.');
+        } else if (err.message.includes('already exists')) {
+          setError('This problem already exists. Please check the title and link.');
         } else {
-          setError('Failed to add problem. Please try again.');
+          setError(err.message || 'Failed to add problem. Please try again.');
         }
       } finally {
         setIsSubmitting(false);
